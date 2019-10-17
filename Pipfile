@@ -8,6 +8,7 @@ black = "==19.3b0"
 pytest = "*"
 ipython = "*"
 ipdb = "*"
+isort = "*"
 
 [packages]
 python-telegram-bot = "*"

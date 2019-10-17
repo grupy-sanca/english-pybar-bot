@@ -1,7 +1,7 @@
 import logging
 import os
-from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
