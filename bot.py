@@ -14,12 +14,20 @@ logger = logging.getLogger(__name__)
 questions = read_file("questions.dat")
 questions = parser_list(questions)
 
+TOKEN = os.getenv("TOKEN")
 
-def main(token):
-    updater = Updater(token=token, use_context=True)
-    dispatcher = updater.dispatcher
-    add_handler(dispatcher)
-    updater.start_polling()
+mode = os.getenv("MODE")
+if mode == "dev":
+    def run(updater):
+        updater.start_polling()
+elif mode == "prod":
+    def run(updater):
+        PORT = int(os.environ.get("PORT", "8443"))
+        HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
+        updater.start_webhook(listen="0.0.0.0",
+                            port=PORT,
+                            url_path=TOKEN)
+        updater.bot.set_webhook("https://{}.herokuapp.com/{}".format(HEROKU_APP_NAME, TOKEN))
 
 
 def add_handler(dispatcher):
@@ -45,5 +53,7 @@ def draw_question():
 
 
 if __name__ == "__main__":
-    token = os.environ["TOKEN"]
-    main(token)
+    updater = Updater(token=TOKEN, use_context=True)
+    dispatcher = updater.dispatcher
+    add_handler(dispatcher)
+    run(updater)
