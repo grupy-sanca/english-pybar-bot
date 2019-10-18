@@ -1,12 +1,18 @@
 import logging
 import os
+import random
 
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+
+from questions_parser import parser_list, read_file
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+questions = read_file("questions.dat")
+questions = parser_list(questions)
 
 
 def main(token):
@@ -26,10 +32,16 @@ def add_handler(dispatcher):
 
 def send_message(update, context):
     logger.info(update.message.text)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=draw_question())
 
 
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="Hello World!")
+
+
+def draw_question():
+    global questions
+    return random.choice(questions)
 
 
 if __name__ == "__main__":
