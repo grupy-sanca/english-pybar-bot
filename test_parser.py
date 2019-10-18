@@ -10,5 +10,3 @@ def questions():
 
 def test_parser_list(questions):
     assert parser_list(questions) == ["a", "a", "a"]
-
-
