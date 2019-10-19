@@ -9,6 +9,8 @@ pytest = "*"
 ipython = "*"
 ipdb = "*"
 isort = "*"
+flake8 = "*"
+pre-commit = "*"
 
 [packages]
 python-telegram-bot = "*"
