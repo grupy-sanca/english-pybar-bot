@@ -7,9 +7,7 @@ from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from questions_parser import parser_list, read_file
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 questions = read_file("questions.dat")
@@ -30,9 +28,7 @@ elif mode == "prod":
         PORT = int(os.environ.get("PORT", "8443"))
         HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
         updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
-        updater.bot.set_webhook(
-            "https://{}.herokuapp.com/{}".format(HEROKU_APP_NAME, TOKEN)
-        )
+        updater.bot.set_webhook("https://{}.herokuapp.com/{}".format(HEROKU_APP_NAME, TOKEN))
 
 
 else:
