@@ -119,7 +119,7 @@ def join_session(update, context):
 def get_session_id(user):
     global sessions
     session_id = None
-    for session_id, session in sessions.items:
+    for session_id, session in sessions.items():
         if user in session["user_list"]:
             session_id = session_id
             break
