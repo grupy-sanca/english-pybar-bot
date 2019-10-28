@@ -74,9 +74,11 @@ def draw_question():
 
 
 def create_session(update, context):
-    global sessions
+    global sessions, questions
+    session_questions = questions[:]
+    random.shuffle(session_questions)
     session_id = str(update.message.from_user.id)
-    sessions[session_id] = {"user_list": [session_id], "questions": random.shuffle(questions)}
+    sessions[session_id] = {"user_list": [session_id], "questions": session_questions}
     dump_session()
 
     context.bot.send_message(
@@ -104,7 +106,7 @@ def join_session(update, context):
 
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"Session joined!\nThe current questions is {sessions[session_id]['questions'][-1]}",
+        text=f"Session joined!\nThe current questions is: {sessions[session_id]['questions'][-1]}",
     )
 
 
