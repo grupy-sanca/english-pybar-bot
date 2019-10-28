@@ -55,6 +55,12 @@ def add_handler(dispatcher):
     join_session_handler = CommandHandler("join_session", join_session)
     dispatcher.add_handler(join_session_handler)
 
+    session_draw_question_handler = CommandHandler("session_draw_question", session_draw_question)
+    dispatcher.add_handler(session_draw_question_handler)
+
+    current_session_question_handler = CommandHandler("current_session_question", current_session_question)
+    dispatcher.add_handler(current_session_question_handler)
+
     message_handler = MessageHandler(Filters.text, send_message)
     dispatcher.add_handler(message_handler)
 
@@ -106,7 +112,55 @@ def join_session(update, context):
 
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"Session joined!\nThe current questions is: {sessions[session_id]['questions'][-1]}",
+        text=f"Session joined!\nThe current questions is:\n{sessions[session_id]['questions'][-1]}",
+    )
+
+
+def get_session_id(user):
+    global sessions
+    session_id = None
+    for session_id, session in sessions.items():
+        if user in session["user_list"]:
+            session_id = session_id
+            break
+    return session_id
+
+
+def session_draw_question(update, context):
+    global sessions
+    user = update.message.from_user.id
+    session_id = get_session_id(user)
+
+    if not session_id:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=draw_question())
+        return
+    if not sessions[session_id]["questions"]:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Questions list is empty :(")
+        return
+    sessions[session_id]["questions"].pop()
+    dump_session()
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text=f"{sessions[session_id]['questions'][-1]}"
+    )
+
+
+def current_session_question(update, context):
+    global sessions
+    user = update.message.from_user.id
+    session_id = get_session_id(user)
+
+    if not session_id:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text="You currently don't belong to a session"
+        )
+        return
+    if not sessions[session_id]["questions"]:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Questions list is empty :(")
+        return
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"The current question is:\n{sessions[session_id]['questions'][-1]}",
     )
 
 
