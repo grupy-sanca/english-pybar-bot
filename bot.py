@@ -112,7 +112,7 @@ def join_session(update, context):
 
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"Session joined!\nThe current questions is: {sessions[session_id]['questions'][-1]}",
+        text=f"Session joined!\nThe current questions is:\n{sessions[session_id]['questions'][-1]}",
     )
 
 
@@ -137,9 +137,11 @@ def session_draw_question(update, context):
     if not sessions[session_id]["questions"]:
         context.bot.send_message(chat_id=update.effective_chat.id, text="Questions list is empty :(")
         return
-    question = sessions[session_id]["questions"].pop()
+    sessions[session_id]["questions"].pop()
     dump_session()
-    context.bot.send_message(chat_id=update.effective_chat.id, text=question)
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text=f"{sessions[session_id]['questions'][-1]}"
+    )
 
 
 def current_session_question(update, context):
@@ -158,7 +160,7 @@ def current_session_question(update, context):
 
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"The current question is: {sessions[session_id]['questions'][-1]}",
+        text=f"The current question is:\n{sessions[session_id]['questions'][-1]}",
     )
 
 
