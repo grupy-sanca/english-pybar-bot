@@ -143,7 +143,7 @@ def current_session_question(update, context):
 
     if not session_id:
         context.bot.send_message(
-            chat_id=update.effective_chat.id, text="You currenctly does not belong to a session"
+            chat_id=update.effective_chat.id, text="You currently don't belong to a session"
         )
         return
     if not sessions[session_id]["questions"]:
