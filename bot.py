@@ -110,6 +110,52 @@ def join_session(update, context):
     )
 
 
+def get_session_id(user):
+    global sessions
+    session_id = None
+    for session_id, session in sessions.items:
+        if user in session["user_list"]:
+            session_id = session_id
+            break
+    return session_id
+
+
+def session_draw_question(update, context):
+    global sessions
+    user = update.message.from_user.id
+    session_id = get_session_id(user)
+
+    if not session_id:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=draw_question())
+        return
+    if not sessions[session_id]["questions"]:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Questions list is empty :(")
+        return
+    question = sessions[session_id]["questions"].pop()
+    dump_session()
+    context.bot.send_message(chat_id=update.effective_chat.id, text=question)
+
+
+def current_session_question(update, context):
+    global sessions
+    user = update.message.from_user.id
+    session_id = get_session_id(user)
+
+    if not session_id:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text="You currenctly does not belong to a session"
+        )
+        return
+    if not sessions[session_id]["questions"]:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Questions list is empty :(")
+        return
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"The current question is: {sessions[session_id]['questions'][-1]}",
+    )
+
+
 if __name__ == "__main__":
     updater = Updater(token=TOKEN, use_context=True)
     dispatcher = updater.dispatcher
