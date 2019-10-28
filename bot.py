@@ -1,5 +1,6 @@
 import logging
 import os
+import pickle
 import random
 import sys
 
@@ -12,6 +13,9 @@ logger = logging.getLogger(__name__)
 
 questions = read_file("questions.dat")
 questions = parser_list(questions)
+
+with open("sessions.dat", "rb") as fp:
+    sessions = pickle.load(fp)
 
 TOKEN = os.getenv("TOKEN")
 
@@ -36,9 +40,20 @@ else:
     sys.exit(1)
 
 
+def dump_session():
+    with open("sessions.dat", "wb") as fp:
+        pickle.dump(sessions, fp)
+
+
 def add_handler(dispatcher):
     start_handler = CommandHandler("start", start)
     dispatcher.add_handler(start_handler)
+
+    create_session_handler = CommandHandler("create_session", create_session)
+    dispatcher.add_handler(create_session_handler)
+
+    join_session_handler = CommandHandler("join_session", join_session)
+    dispatcher.add_handler(join_session_handler)
 
     message_handler = MessageHandler(Filters.text, send_message)
     dispatcher.add_handler(message_handler)
@@ -56,6 +71,43 @@ def start(update, context):
 def draw_question():
     global questions
     return random.choice(questions)
+
+
+def create_session(update, context):
+    global sessions, questions
+    session_questions = questions[:]
+    random.shuffle(session_questions)
+    session_id = str(update.message.from_user.id)
+    sessions[session_id] = {"user_list": [session_id], "questions": session_questions}
+    dump_session()
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text=f"Session created!\nUse this code to join: {session_id}"
+    )
+
+
+def join_session(update, context):
+    global sessions
+    text_split = update.message.text.split()
+    if len(text_split) < 2:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Usage: /join_session SESSION_ID")
+        return
+    session_id = text_split[-1]
+    if session_id not in sessions.keys():
+        context.bot.send_message(chat_id=update.effective_chat.id, text=f"SESSION_ID {session_id} is invalid")
+        return
+    user = update.message.from_user.id
+    if user in sessions[session_id]["user_list"]:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=f"You already are in this session!")
+        return
+
+    sessions[session_id]["user_list"].append(user)
+    dump_session()
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"Session joined!\nThe current questions is: {sessions[session_id]['questions'][-1]}",
+    )
 
 
 if __name__ == "__main__":
