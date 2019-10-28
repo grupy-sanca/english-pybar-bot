@@ -55,6 +55,12 @@ def add_handler(dispatcher):
     join_session_handler = CommandHandler("join_session", join_session)
     dispatcher.add_handler(join_session_handler)
 
+    session_draw_question_handler = CommandHandler("session_draw_question", session_draw_question)
+    dispatcher.add_handler(session_draw_question_handler)
+
+    current_session_question_handler = CommandHandler("current_session_question", current_session_question)
+    dispatcher.add_handler(current_session_question_handler)
+
     message_handler = MessageHandler(Filters.text, send_message)
     dispatcher.add_handler(message_handler)
 
