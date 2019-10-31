@@ -105,3 +105,6 @@ venv.bak/
 
 # from now on, ignores sessions.dat
 sessions.dat
+
+#ignore env files 
+*.env

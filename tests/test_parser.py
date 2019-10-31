@@ -1,6 +1,6 @@
 import pytest
 
-from questions_parser import parser_list
+from .questions_parser import parser_list
 
 
 @pytest.mark.parametrize(
