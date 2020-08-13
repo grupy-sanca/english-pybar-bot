@@ -96,7 +96,7 @@ def join_session(update, context):
     global sessions
     text_split = update.message.text.split()
     if len(text_split) < 2:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Usage: /join_session SESSION_ID")
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Usage: /join_session SESSION_ID")
         return
     session_id = text_split[-1]
     if session_id not in sessions.keys():
@@ -104,7 +104,7 @@ def join_session(update, context):
         return
     user = update.message.from_user.id
     if user in sessions[session_id]["user_list"]:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=f"You already are in this session!")
+        context.bot.send_message(chat_id=update.effective_chat.id, text="You already are in this session!")
         return
 
     sessions[session_id]["user_list"].append(user)
