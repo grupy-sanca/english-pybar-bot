@@ -5,7 +5,7 @@ import random
 import sys
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CommandHandler, CallbackQueryHandler, Filters, MessageHandler, Updater
+from telegram.ext import CallbackQueryHandler, CommandHandler, Filters, MessageHandler, Updater
 
 from questions_parser import parser_list, read_file
 
@@ -72,12 +72,18 @@ def send_message(update, context):
 
 
 def start(update, context):
-    keyboard = [[InlineKeyboardButton("Create session", callback_data="/create_session"),
-                 InlineKeyboardButton("Draw random question", callback_data="/random_question")]]
+    keyboard = [
+        [
+            InlineKeyboardButton("Create session", callback_data="/create_session"),
+            InlineKeyboardButton("Draw random question", callback_data="/random_question"),
+        ]
+    ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text("Hello World!\nPlease, create a new session or draw a random question", reply_markup=reply_markup)
+    update.message.reply_text(
+        "Hello World!\nPlease, create a new session or draw a random question", reply_markup=reply_markup
+    )
 
 
 def on_button_press(update, context):
@@ -115,8 +121,7 @@ def create_session(update, context):
     sessions[session_id] = {"user_list": [session_id], "questions": session_questions}
     dump_session()
 
-    update.edit_message_text(
-        text=f"Session created!\nUse this code to join: {session_id}")
+    update.edit_message_text(text=f"Session created!\nUse this code to join: {session_id}")
 
 
 def join_session(update, context):
@@ -137,15 +142,17 @@ def join_session(update, context):
     sessions[session_id]["user_list"].append(user)
     dump_session()
 
-    keyboard = [[InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
-                [InlineKeyboardButton("Get current question", callback_data="/current_question")]]
+    keyboard = [
+        [InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
+        [InlineKeyboardButton("Get current question", callback_data="/current_question")],
+    ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=f"Session joined!\nThe current questions is:\n{sessions[session_id]['questions'][-1]}",
-        reply_markup=reply_markup
+        reply_markup=reply_markup,
     )
 
 
@@ -173,13 +180,14 @@ def session_draw_question(update, context):
     sessions[session_id]["questions"].pop()
     dump_session()
 
-    keyboard = [[InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
-                [InlineKeyboardButton("Get current question", callback_data="/current_question")]]
+    keyboard = [
+        [InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
+        [InlineKeyboardButton("Get current question", callback_data="/current_question")],
+    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     update.edit_message_text(
-        text=f"The next question is:\n{sessions[session_id]['questions'][-1]}",
-        reply_markup=reply_markup
+        text=f"The next question is:\n{sessions[session_id]['questions'][-1]}", reply_markup=reply_markup
     )
 
 
@@ -189,21 +197,20 @@ def current_session_question(update, context):
     session_id = get_session_id(user)
 
     if not session_id:
-        update.edit_message_text(
-            text="You currently don't belong to a session"
-        )
+        update.edit_message_text(text="You currently don't belong to a session")
         return
     if not sessions[session_id]["questions"]:
         update.edit_message_text(text="Questions list is empty :(")
         return
 
-    keyboard = [[InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
-                [InlineKeyboardButton("Get current question", callback_data="/current_question")]]
+    keyboard = [
+        [InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
+        [InlineKeyboardButton("Get current question", callback_data="/current_question")],
+    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     update.edit_message_text(
-        text=f"The current question is:\n{sessions[session_id]['questions'][-1]}",
-        reply_markup=reply_markup
+        text=f"The current question is:\n{sessions[session_id]['questions'][-1]}", reply_markup=reply_markup
     )
 
 
