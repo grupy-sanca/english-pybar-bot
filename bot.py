@@ -143,8 +143,10 @@ def join_session(update, context):
     dump_session()
 
     keyboard = [
-        [InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
-        [InlineKeyboardButton("Get current question", callback_data="/current_question")],
+        [
+            InlineKeyboardButton("Draw next question", callback_data="/draw_question"),
+            InlineKeyboardButton("Get current question", callback_data="/current_question"),
+        ]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -181,8 +183,10 @@ def session_draw_question(update, context):
     dump_session()
 
     keyboard = [
-        [InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
-        [InlineKeyboardButton("Get current question", callback_data="/current_question")],
+        [
+            InlineKeyboardButton("Draw next question", callback_data="/draw_question"),
+            InlineKeyboardButton("Get current question", callback_data="/current_question"),
+        ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -204,8 +208,10 @@ def current_session_question(update, context):
         return
 
     keyboard = [
-        [InlineKeyboardButton("Draw next question", callback_data="/draw_question")],
-        [InlineKeyboardButton("Get current question", callback_data="/current_question")],
+        [
+            InlineKeyboardButton("Draw next question", callback_data="/draw_question"),
+            InlineKeyboardButton("Get current question", callback_data="/current_question"),
+        ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
