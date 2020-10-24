@@ -28,7 +28,7 @@ then edit .env with the correct values.
 
 ### To run the tests, run:
 ```
-(venv) $ pytest
+$ make test
 ```
 After each new feature make sure to write tests for that feature.
 
