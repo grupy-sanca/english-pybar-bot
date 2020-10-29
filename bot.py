@@ -73,13 +73,16 @@ def send_message(update, context):
     logger.info(update.message.text)
     context.bot.send_message(chat_id=update.effective_chat.id, text=draw_question())
 
+
 def help(update, context):
     text = "Welcome to the English PyBar Bot by @grupysanca!\n\n"
     text += "Send /start to get started.\n\n"
     text += "To create a new session, click on the 'Create session' button.\n\n"
     text += "You can get a random question from the default question list without joining a session clicking on the 'Draw random question' button.\n\n"
     text += "If you already have a session id, send /join_session SESSION_ID to join.\n\n"
-    text += "Once you join a session, there are buttons to draw a new question and to get the current one.\n\n"
+    text += (
+        "Once you join a session, there are buttons to draw a new question and to get the current one.\n\n"
+    )
     text += "Have fun!"
     context.bot.send_message(chat_id=update.effective_chat.id, text=text)
 
