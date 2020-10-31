@@ -83,7 +83,8 @@ def help(update, context):
     text += (
         "Once you join a session, there are buttons to draw a new question and to get the current one.\n\n"
     )
-    text += "Have fun!"
+    text += "Have fun!\n\n"
+    text += "This bot is open source and can be found here: https://github.com/grupy-sanca/english-pybar-bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=text)
 
 
