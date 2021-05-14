@@ -36,7 +36,7 @@ elif mode == "prod":
             listen="0.0.0.0",
             port=PORT,
             url_path=TOKEN,
-            webhook_url=f"https://{HEROKU_APP_NAME}.herokuapp.com/",
+            webhook_url=f"https://{HEROKU_APP_NAME}.herokuapp.com/{TOKEN}",
         )
 
 
